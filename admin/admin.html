@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON 管理 · 樱花小站</title>
+  <style>
+    :root {
+      --pink-100: #ffeaf3;
+      --pink-200: #ffd3e5;
+      --pink-500: #f06a9f;
+      --text: #5a3a4a;
+      --muted: #8d6b7a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, #fff7fb, #ffeaf3, #ffd3e5);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .panel {
+      width: min(680px, 100%);
+      background: rgba(255, 252, 254, 0.98);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 24px 70px rgba(90, 58, 74, 0.2);
+      border: 1px solid rgba(255, 159, 200, 0.5);
+    }
+    h1 { margin: 0 0 4px; font-size: 1.4rem; color: #b54873; }
+    .desc { margin: 0 0 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .actions button {
+      border: 1px solid var(--pink-200); background: #fff; color: #a03d68;
+      padding: 8px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s, transform 0.2s, opacity 0.2s;
+    }
+    .actions button:hover:not(:disabled) { background: var(--pink-100); transform: translateY(-1px); }
+    .actions button:disabled { opacity: 0.6; cursor: wait; }
+    .actions button.primary {
+      background: linear-gradient(135deg, #ff9fc8, #f06a9f);
+      border-color: transparent; color: #fff;
+      box-shadow: 0 8px 18px rgba(240, 106, 159, 0.28);
+    }
+    .status { margin: 0 0 12px; min-height: 20px; color: var(--muted); font-size: 0.85rem; }
+    .status.error { color: #b54873; }
+    #jsonEditor {
+      width: 100%; min-height: 360px; resize: vertical;
+      border: 1px solid var(--pink-200); border-radius: 16px; padding: 16px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px; line-height: 1.65; color: #4f3441; background: #fffafd; outline: none;
+    }
+    #jsonEditor:focus { border-color: var(--pink-500); box-shadow: 0 0 0 4px rgba(240, 106, 159, 0.12); }
+    .back-link { display: inline-block; margin-top: 16px; color: #b54873; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    @media (max-width: 500px) { .panel { padding: 18px; } h1 { font-size: 1.2rem; } }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>JSON 管理</h1>
+    <p class="desc">导入、编辑、应用、导出或复制 index.json</p>
+
+    <div class="actions">
+      <button id="importFileBtn" type="button">导入文件</button>
+      <input id="fileInput" type="file" accept=".json,application/json" hidden />
+      <button id="loadServerBtn" type="button">从 index.json 载入</button>
+      <button id="resetJsonBtn" type="button">载入示例</button>
+      <button id="formatJsonBtn" type="button">格式化</button>
+      <button id="applyJsonBtn" class="primary" type="button">应用</button>
+      <button id="exportJsonBtn" type="button">导出</button>
+      <button id="copyJsonBtn" type="button">复制</button>
+    </div>
+
+    <p id="panelStatus" class="status">可导入、编辑、应用、导出或复制 JSON。</p>
+    <textarea id="jsonEditor" spellcheck="false" aria-label="JSON 编辑器"></textarea>
+
+    <a class="back-link" href="../site/index.html">← 返回主站</a>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      const DATA_URL = "../site/index.json";
+      const $ = (id) => document.getElementById(id);
+
+      const DEFAULT_DATA = {
+        site: {
+          eyebrow: "SAKURA PORTFOLIO",
+          title: "樱花小站",
+          subtitle: "一个由 index.json 驱动的个人主页，点击按钮手动拉取最新内容。",
+          footer: "© 2026 樱花小站"
+        },
+        profile: {
+          name: "你的名字",
+          avatar: "",
+          bio: "你好，我是……喜欢前端、写小项目、记录生活。头像可以填图片 URL，也可以留空显示名字首字。",
+          tags: ["前端", "PHP", "折腾", "樱花"],
+          links: [
+            { label: "GitHub", url: "https://github.com/yourname" },
+            { label: "我的博客", url: "https://example.com/blog" }
+          ]
+        },
+        projects: [
+          {
+            title: "项目一",
+            description: "这是一个项目简介，点击卡片会跳转到 url 里的地址。",
+            url: "https://example.com/project1",
+            icon: "🌸",
+            tags: ["HTML", "CSS"]
+          },
+          {
+            title: "项目二",
+            description: "地址可以写完整 https://，也可以写 example.com，程序会自动补 https://。",
+            url: "https://example.com/project2",
+            icon: "🍡",
+            tags: ["JavaScript"]
+          },
+          {
+            title: "项目三",
+            description: "如果不想跳转，可以把 url 留空，它会变成不可点击的展示卡片。",
+            url: "",
+            icon: "🌙",
+            tags: ["展示"]
+          }
+        ]
+      };
+
+      function cloneDefault() { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+      function setEditor(data) { $("jsonEditor").value = JSON.stringify(data, null, 2); }
+
+      function parseEditor() {
+        const text = $("jsonEditor").value.replace(/^\uFEFF/, "").trim();
+        if (!text) throw new Error("JSON 内容为空");
+        return JSON.parse(text);
+      }
+
+      function validateData(data) {
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+          throw new Error("JSON 根节点必须是一个对象");
+        }
+        return data;
+      }
+
+      function setPanelStatus(text, isError) {
+        const el = $("panelStatus");
+        el.textContent = text;
+        el.classList.toggle("error", Boolean(isError));
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (!ok) throw new Error("浏览器不支持自动复制，请手动选择文本复制");
+      }
+
+      function downloadJson(data) {
+        const text = JSON.stringify(data, null, 2);
+        const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "index.json";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      }
+
+      function formatJson() {
+        try {
+          const data = validateData(parseEditor());
+          setEditor(data);
+          setPanelStatus("已格式化 JSON。");
+        } catch (error) {
+          setPanelStatus("格式化失败：" + error.message, true);
+        }
+      }
+
+      function exportJson() {
+        try {
+          const data = validateData(parseEditor());
+          downloadJson(data);
+          setPanelStatus("已导出 index.json。");
+        } catch (error) {
+          setPanelStatus("导出失败：" + error.message, true);
+        }
+      }
+
+      async function copyJson() {
+        try {
+          const data = validateData(parseEditor());
+          await copyText(JSON.stringify(data, null, 2));
+          setEditor(data);
+          setPanelStatus("已复制格式化后的 JSON。");
+        } catch (error) {
+          setPanelStatus("复制失败：" + error.message, true);
+        }
+      }
+
+      async function loadFromServerIntoEditor() {
+        setPanelStatus("正在从 index.json 载入...");
+        try {
+          const response = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          let text = await response.text();
+          text = text.replace(/^\uFEFF/, "");
+          const data = validateData(JSON.parse(text));
+          setEditor(data);
+          setPanelStatus("已从 index.json 载入，点击“应用”生效。");
+        } catch (error) {
+          setPanelStatus("载入失败：" + error.message, true);
+        }
+      }
+
+      function importFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            let text = String(event.target.result || "").replace(/^\uFEFF/, "");
+            const data = validateData(JSON.parse(text));
+            setEditor(data);
+            setPanelStatus("已导入文件，点击“应用”生效。");
+          } catch (error) {
+            setPanelStatus("导入失败：" + error.message, true);
+          } finally {
+            $("fileInput").value = "";
+          }
+        };
+        reader.onerror = () => {
+          setPanelStatus("读取文件失败。", true);
+          $("fileInput").value = "";
+        };
+        reader.readAsText(file, "utf-8");
+      }
+
+      $("importFileBtn").addEventListener("click", () => $("fileInput").click());
+      $("fileInput").addEventListener("change", function () {
+        importFile(this.files && this.files[0]);
+      });
+      $("loadServerBtn").addEventListener("click", loadFromServerIntoEditor);
+      $("resetJsonBtn").addEventListener("click", () => {
+        setEditor(cloneDefault());
+        setPanelStatus("已载入内置示例，点击“应用”生效。");
+      });
+      $("formatJsonBtn").addEventListener("click", formatJson);
+      $("applyJsonBtn").addEventListener("click", () => {
+        try {
+          const data = validateData(parseEditor());
+          setEditor(data);
+          setPanelStatus("已应用到编辑器（需回到主站手动刷新查看）。");
+        } catch (error) {
+          setPanelStatus("应用失败：" + error.message, true);
+        }
+      });
+      $("exportJsonBtn").addEventListener("click", exportJson);
+      $("copyJsonBtn").addEventListener("click", copyJson);
+
+      setEditor(DEFAULT_DATA);
+    })();
+  </script>
+</body>
+</html>

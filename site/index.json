@@ -1,0 +1,41 @@
+{
+  "site": {
+    "eyebrow": "SAKURA PORTFOLIO",
+    "title": "樱花小站",
+    "subtitle": "一个由 index.json 驱动的个人主页，点击按钮手动拉取最新内容。",
+    "footer": "© 2026 樱花小站 · Powered by InfinityFree"
+  },
+  "profile": {
+    "name": "你的名字",
+    "avatar": "",
+    "bio": "你好，我是……喜欢前端、写小项目、记录生活。头像可以填图片 URL，也可以留空显示名字首字。",
+    "tags": ["前端", "PHP", "折腾", "樱花"],
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/yourname" },
+      { "label": "我的博客", "url": "https://example.com/blog" }
+    ]
+  },
+  "projects": [
+    {
+      "title": "项目一",
+      "description": "这是一个项目简介，点击卡片会跳转到 url 里的地址。",
+      "url": "https://example.com/project1",
+      "icon": "🌸",
+      "tags": ["HTML", "CSS"]
+    },
+    {
+      "title": "项目二",
+      "description": "地址可以写完整 https://，也可以写 example.com，程序会自动补 https://。",
+      "url": "https://example.com/project2",
+      "icon": "🍡",
+      "tags": ["JavaScript"]
+    },
+    {
+      "title": "项目三",
+      "description": "如果不想跳转，可以把 url 留空，它会变成不可点击的展示卡片。",
+      "url": "",
+      "icon": "🌙",
+      "tags": ["展示"]
+    }
+  ]
+}
