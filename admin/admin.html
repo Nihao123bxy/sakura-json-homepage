@@ -8,6 +8,7 @@
     :root {
       --pink-100: #ffeaf3;
       --pink-200: #ffd3e5;
+      --pink-300: #ffb3d1;
       --pink-500: #f06a9f;
       --text: #5a3a4a;
       --muted: #8d6b7a;
@@ -19,10 +20,11 @@
         "Microsoft YaHei", sans-serif;
       color: var(--text);
       background: linear-gradient(135deg, #fff7fb, #ffeaf3, #ffd3e5);
-      display: flex; align-items: center; justify-content: center; padding: 20px;
+      padding: 20px;
     }
     .panel {
-      width: min(680px, 100%);
+      width: min(900px, 100%);
+      margin: 0 auto;
       background: rgba(255, 252, 254, 0.98);
       border-radius: 24px;
       padding: 26px;
@@ -30,52 +32,241 @@
       border: 1px solid rgba(255, 159, 200, 0.5);
     }
     h1 { margin: 0 0 4px; font-size: 1.4rem; color: #b54873; }
-    .desc { margin: 0 0 18px; color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .actions button {
-      border: 1px solid var(--pink-200); background: #fff; color: #a03d68;
-      padding: 8px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; transition: background 0.2s, transform 0.2s, opacity 0.2s;
+    .desc { margin: 0 0 16px; color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
     }
-    .actions button:hover:not(:disabled) { background: var(--pink-100); transform: translateY(-1px); }
-    .actions button:disabled { opacity: 0.6; cursor: wait; }
-    .actions button.primary {
+
+    .toolbar select,
+    .toolbar button {
+      border: 1px solid var(--pink-200);
+      background: #fff;
+      color: #a03d68;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .toolbar select { border-radius: 10px; }
+
+    .toolbar button:hover:not(:disabled) { background: var(--pink-100); }
+    .toolbar button:disabled { opacity: 0.6; cursor: wait; }
+
+    .toolbar button.primary {
       background: linear-gradient(135deg, #ff9fc8, #f06a9f);
-      border-color: transparent; color: #fff;
-      box-shadow: 0 8px 18px rgba(240, 106, 159, 0.28);
+      border-color: transparent;
+      color: #fff;
     }
+
+    .mode-tabs {
+      display: inline-flex;
+      padding: 4px;
+      background: #fffafd;
+      border: 1px solid var(--pink-200);
+      border-radius: 999px;
+      gap: 4px;
+    }
+
+    .mode-tabs button {
+      border: none;
+      background: transparent;
+      color: #a03d68;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mode-tabs button.active {
+      background: linear-gradient(135deg, #ff9fc8, #f06a9f);
+      color: #fff;
+    }
+
     .status { margin: 0 0 12px; min-height: 20px; color: var(--muted); font-size: 0.85rem; }
     .status.error { color: #b54873; }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
     #jsonEditor {
-      width: 100%; min-height: 360px; resize: vertical;
+      width: 100%; min-height: 420px; resize: vertical;
       border: 1px solid var(--pink-200); border-radius: 16px; padding: 16px;
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       font-size: 13px; line-height: 1.65; color: #4f3441; background: #fffafd; outline: none;
     }
     #jsonEditor:focus { border-color: var(--pink-500); box-shadow: 0 0 0 4px rgba(240, 106, 159, 0.12); }
+
+    .group {
+      margin-bottom: 18px;
+      padding: 16px;
+      background: #fffafd;
+      border: 1px solid var(--pink-200);
+      border-radius: 16px;
+    }
+
+    .group > h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: #b54873;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .field { margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a03d68;
+    }
+
+    .field input[type="text"],
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--pink-200);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+    }
+
+    .field input[type="text"]:focus,
+    .field textarea:focus { border-color: var(--pink-500); }
+
+    .field textarea { min-height: 70px; resize: vertical; }
+
+    .hint { margin: 4px 0 0; font-size: 0.76rem; color: var(--muted); }
+
+    .item {
+      position: relative;
+      margin-bottom: 12px;
+      padding: 14px;
+      background: #fff;
+      border: 1px dashed var(--pink-300);
+      border-radius: 14px;
+    }
+
+    .item:last-child { margin-bottom: 0; }
+
+    .item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .item-head strong { font-size: 0.9rem; color: #b54873; }
+
+    .small-btn {
+      border: 1px solid var(--pink-200);
+      background: #fff;
+      color: #a03d68;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .small-btn:hover { background: var(--pink-100); }
+
+    .small-btn.danger { color: #c0395e; border-color: #f3b8cb; }
+    .small-btn.danger:hover { background: #ffe3ec; }
+
+    .add-btn {
+      border: 1px dashed var(--pink-300);
+      background: #fff;
+      color: #a03d68;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .add-btn:hover { background: var(--pink-100); }
+
+    .kv-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr auto;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .kv-row input {
+      border: 1px solid var(--pink-200);
+      border-radius: 8px;
+      padding: 7px 9px;
+      font-size: 0.83rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+    }
+
+    .kv-row input:focus { border-color: var(--pink-500); }
+
     .back-link { display: inline-block; margin-top: 16px; color: #b54873; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
     .back-link:hover { text-decoration: underline; }
-    @media (max-width: 500px) { .panel { padding: 18px; } h1 { font-size: 1.2rem; } }
+
+    @media (max-width: 560px) {
+      .panel { padding: 18px; }
+      h1 { font-size: 1.2rem; }
+      .kv-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <div class="panel">
     <h1>JSON 管理</h1>
-    <p class="desc">导入、编辑、应用、导出或复制 index.json</p>
+    <p class="desc">可视化编辑或直接改 JSON，支持 index.json 和 themes.json。</p>
 
-    <div class="actions">
+    <div class="toolbar">
+      <select id="fileSelect">
+        <option value="data">index.json（站点数据）</option>
+        <option value="themes">themes.json（主题配置）</option>
+      </select>
+
+      <div class="mode-tabs">
+        <button id="modeVisual" class="active" type="button">可视化</button>
+        <button id="modeJson" type="button">JSON</button>
+      </div>
+
       <button id="importFileBtn" type="button">导入文件</button>
       <input id="fileInput" type="file" accept=".json,application/json" hidden />
-      <button id="loadServerBtn" type="button">从 index.json 载入</button>
-      <button id="resetJsonBtn" type="button">载入示例</button>
-      <button id="formatJsonBtn" type="button">格式化</button>
-      <button id="applyJsonBtn" class="primary" type="button">应用</button>
-      <button id="exportJsonBtn" type="button">导出</button>
-      <button id="copyJsonBtn" type="button">复制</button>
+      <button id="loadServerBtn" type="button">从服务器载入</button>
+      <button id="resetBtn" type="button">载入示例</button>
+      <button id="exportBtn" class="primary" type="button">导出</button>
+      <button id="copyBtn" type="button">复制</button>
     </div>
 
-    <p id="panelStatus" class="status">可导入、编辑、应用、导出或复制 JSON。</p>
-    <textarea id="jsonEditor" spellcheck="false" aria-label="JSON 编辑器"></textarea>
+    <p id="panelStatus" class="status">已选择 index.json（站点数据）。</p>
+
+    <div id="visualView" class="view active"></div>
+
+    <div id="jsonView" class="view">
+      <textarea id="jsonEditor" spellcheck="false" aria-label="JSON 编辑器"></textarea>
+    </div>
 
     <a class="back-link" href="../site/index.html">← 返回主站</a>
   </div>
@@ -83,24 +274,28 @@
   <script>
     (function () {
       "use strict";
-      const DATA_URL = "../site/index.json";
+
       const $ = (id) => document.getElementById(id);
+
+      const FILES = {
+        data: { url: "../site/index.json", filename: "index.json", label: "index.json（站点数据）" },
+        themes: { url: "../site/themes.json", filename: "themes.json", label: "themes.json（主题配置）" }
+      };
 
       const DEFAULT_DATA = {
         site: {
           eyebrow: "SAKURA PORTFOLIO",
           title: "樱花小站",
-          subtitle: "一个由 index.json 驱动的个人主页，点击按钮手动拉取最新内容。",
+          subtitle: "一个由 index.json 驱动的个人主页，支持主题切换与手动拉取刷新。",
           footer: "© 2026 樱花小站"
         },
         profile: {
           name: "你的名字",
           avatar: "",
-          bio: "你好，我是……喜欢前端、写小项目、记录生活。头像可以填图片 URL，也可以留空显示名字首字。",
+          bio: "你好，我是……喜欢前端、写小项目、记录生活。",
           tags: ["前端", "PHP", "折腾", "樱花"],
           links: [
-            { label: "GitHub", url: "https://github.com/yourname" },
-            { label: "我的博客", url: "https://example.com/blog" }
+            { label: "GitHub", url: "https://github.com/Nihao123bxy" }
           ]
         },
         projects: [
@@ -110,39 +305,63 @@
             url: "https://example.com/project1",
             icon: "🌸",
             tags: ["HTML", "CSS"]
-          },
-          {
-            title: "项目二",
-            description: "地址可以写完整 https://，也可以写 example.com，程序会自动补 https://。",
-            url: "https://example.com/project2",
-            icon: "🍡",
-            tags: ["JavaScript"]
-          },
-          {
-            title: "项目三",
-            description: "如果不想跳转，可以把 url 留空，它会变成不可点击的展示卡片。",
-            url: "",
-            icon: "🌙",
-            tags: ["展示"]
           }
         ]
       };
 
-      function cloneDefault() { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
-      function setEditor(data) { $("jsonEditor").value = JSON.stringify(data, null, 2); }
+      const DEFAULT_THEMES = {
+        default: "sakura",
+        themes: [
+          {
+            id: "sakura",
+            name: "樱花",
+            variables: {
+              "--bg-1": "#fff7fb",
+              "--bg-2": "#ffeaf3",
+              "--bg-3": "#ffd3e5",
+              "--pink-100": "#ffeaf3",
+              "--pink-200": "#ffd3e5",
+              "--pink-300": "#ffb3d1",
+              "--pink-500": "#f06a9f",
+              "--text": "#5a3a4a",
+              "--muted": "#8d6b7a",
+              "--card": "rgba(255, 255, 255, 0.72)",
+              "--shadow": "0 18px 50px rgba(240, 106, 159, 0.16)"
+            },
+            background: "",
+            css: ""
+          },
+          {
+            id: "night",
+            name: "夜间",
+            variables: {
+              "--bg-1": "#1a1622",
+              "--bg-2": "#221c2c",
+              "--bg-3": "#2e263a",
+              "--pink-100": "#2a2333",
+              "--pink-200": "#3d3348",
+              "--pink-300": "#57476a",
+              "--pink-500": "#c792ea",
+              "--text": "#e8e3f0",
+              "--muted": "#a89bb8",
+              "--card": "rgba(40, 34, 52, 0.72)",
+              "--shadow": "0 18px 50px rgba(0, 0, 0, 0.45)"
+            },
+            background: "",
+            css: ""
+          }
+        ]
+      };
 
-      function parseEditor() {
-        const text = $("jsonEditor").value.replace(/^\uFEFF/, "").trim();
-        if (!text) throw new Error("JSON 内容为空");
-        return JSON.parse(text);
+      let currentKey = "data";
+      let mode = "visual";
+      let state = null;
+
+      function defaultsFor(key) {
+        return JSON.parse(JSON.stringify(key === "themes" ? DEFAULT_THEMES : DEFAULT_DATA));
       }
 
-      function validateData(data) {
-        if (!data || typeof data !== "object" || Array.isArray(data)) {
-          throw new Error("JSON 根节点必须是一个对象");
-        }
-        return data;
-      }
+      function currentFile() { return FILES[currentKey]; }
 
       function setPanelStatus(text, isError) {
         const el = $("panelStatus");
@@ -150,125 +369,432 @@
         el.classList.toggle("error", Boolean(isError));
       }
 
-      async function copyText(text) {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          return;
+      function validateByKey(key, data) {
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+          throw new Error("JSON 根节点必须是一个对象");
         }
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        const ok = document.execCommand("copy");
-        document.body.removeChild(ta);
-        if (!ok) throw new Error("浏览器不支持自动复制，请手动选择文本复制");
+        if (key === "themes") {
+          if (!Array.isArray(data.themes) || data.themes.length === 0) {
+            throw new Error("themes.json 必须包含非空的 themes 数组");
+          }
+          data.themes.forEach(function (t, i) {
+            if (!t || typeof t !== "object") throw new Error("themes[" + i + "] 必须是对象");
+            if (!t.id) throw new Error("themes[" + i + "] 缺少 id");
+          });
+          if (data.default && !data.themes.some(function (t) { return t.id === data.default; })) {
+            throw new Error("default 指向的主题不存在：" + data.default);
+          }
+        }
+        return data;
       }
 
-      function downloadJson(data) {
-        const text = JSON.stringify(data, null, 2);
-        const blob = new Blob([text], { type: "application/json;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "index.json";
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+      /* ---------- 工具 ---------- */
+
+      function el(tag, attrs, children) {
+        const node = document.createElement(tag);
+        if (attrs) {
+          Object.keys(attrs).forEach(function (k) {
+            if (k === "class") node.className = attrs[k];
+            else if (k === "text") node.textContent = attrs[k];
+            else if (k.indexOf("on") === 0 && typeof attrs[k] === "function") {
+              node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+            } else if (k === "value") {
+              node.value = attrs[k];
+            } else {
+              node.setAttribute(k, attrs[k]);
+            }
+          });
+        }
+        (children || []).forEach(function (c) {
+          if (c == null) return;
+          node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+        });
+        return node;
       }
 
-      function formatJson() {
-        try {
-          const data = validateData(parseEditor());
-          setEditor(data);
-          setPanelStatus("已格式化 JSON。");
-        } catch (error) {
-          setPanelStatus("格式化失败：" + error.message, true);
+      function field(label, input, hint) {
+        const wrap = el("div", { class: "field" }, [
+          el("label", { text: label }),
+          input
+        ]);
+        if (hint) wrap.appendChild(el("p", { class: "hint", text: hint }));
+        return wrap;
+      }
+
+      function textInput(value, onInput, placeholder) {
+        return el("input", {
+          type: "text",
+          value: value || "",
+          placeholder: placeholder || "",
+          onInput: function (e) { onInput(e.target.value); }
+        });
+      }
+
+      function textArea(value, onInput, placeholder) {
+        const ta = el("textarea", { placeholder: placeholder || "" });
+        ta.value = value || "";
+        ta.addEventListener("input", function () { onInput(ta.value); });
+        return ta;
+      }
+
+      function tagsInput(value, onChange) {
+        return textInput(
+          Array.isArray(value) ? value.join(", ") : "",
+          function (v) {
+            onChange(v.split(",").map(function (s) { return s.trim(); }).filter(Boolean));
+          },
+          "用逗号分隔，例如：前端, PHP, 樱花"
+        );
+      }
+
+      /* ---------- 渲染：data ---------- */
+
+      function renderData() {
+        const view = $("visualView");
+        view.innerHTML = "";
+
+        const site = state.site || {};
+        const siteGroup = el("div", { class: "group" }, [
+          el("h3", { text: "站点信息" }),
+          field("eyebrow（标题上方小字）", textInput(site.eyebrow, function (v) { state.site.eyebrow = v; })),
+          field("title（大标题）", textInput(site.title, function (v) { state.site.title = v; })),
+          field("subtitle（副标题）", textArea(site.subtitle, function (v) { state.site.subtitle = v; })),
+          field("footer（页脚）", textInput(site.footer, function (v) { state.site.footer = v; }))
+        ]);
+        view.appendChild(siteGroup);
+
+        const profile = state.profile || (state.profile = {});
+        const profileGroup = el("div", { class: "group" }, [
+          el("h3", { text: "个人介绍" }),
+          field("名字", textInput(profile.name, function (v) { state.profile.name = v; })),
+          field("头像", textInput(profile.avatar, function (v) { state.profile.avatar = v; }), "支持图片 URL，或 data:image/...;base64,..."),
+          field("简介", textArea(profile.bio, function (v) { state.profile.bio = v; })),
+          field("标签", tagsInput(profile.tags, function (v) { state.profile.tags = v; }), "用逗号分隔")
+        ]);
+
+        const linksBox = el("div", { class: "field" }, [
+          el("label", { text: "个人链接" })
+        ]);
+
+        const linksWrap = el("div");
+        (profile.links || []).forEach(function (link, i) {
+          const item = el("div", { class: "item" }, [
+            el("div", { class: "item-head" }, [
+              el("strong", { text: "链接 " + (i + 1) }),
+              el("button", {
+                class: "small-btn danger", type: "button", text: "删除",
+                onClick: function () { profile.links.splice(i, 1); renderData(); }
+              })
+            ]),
+            field("文字", textInput(link.label, function (v) { link.label = v; })),
+            field("地址", textInput(link.url, function (v) { link.url = v; }))
+          ]);
+          linksWrap.appendChild(item);
+        });
+
+        linksWrap.appendChild(el("button", {
+          class: "add-btn", type: "button", text: "+ 添加链接",
+          onClick: function () {
+            if (!Array.isArray(profile.links)) profile.links = [];
+            profile.links.push({ label: "新链接", url: "" });
+            renderData();
+          }
+        }));
+
+        linksBox.appendChild(linksWrap);
+        profileGroup.appendChild(linksBox);
+        view.appendChild(profileGroup);
+
+        const projectsGroup = el("div", { class: "group" }, [
+          el("h3", { text: "项目卡片" })
+        ]);
+
+        const projectsWrap = el("div");
+        (state.projects || []).forEach(function (project, i) {
+          const item = el("div", { class: "item" }, [
+            el("div", { class: "item-head" }, [
+              el("strong", { text: "项目 " + (i + 1) }),
+              el("button", {
+                class: "small-btn danger", type: "button", text: "删除",
+                onClick: function () { state.projects.splice(i, 1); renderData(); }
+              })
+            ]),
+            field("标题", textInput(project.title, function (v) { project.title = v; })),
+            field("描述", textArea(project.description, function (v) { project.description = v; })),
+            field("链接", textInput(project.url, function (v) { project.url = v; }), "留空则卡片不可点击"),
+            field("图标", textInput(project.icon, function (v) { project.icon = v; }), "可填 emoji，如 🌸"),
+            field("标签", tagsInput(project.tags, function (v) { project.tags = v; }), "用逗号分隔")
+          ]);
+          projectsWrap.appendChild(item);
+        });
+
+        projectsWrap.appendChild(el("button", {
+          class: "add-btn", type: "button", text: "+ 添加项目",
+          onClick: function () {
+            if (!Array.isArray(state.projects)) state.projects = [];
+            state.projects.push({ title: "新项目", description: "", url: "", icon: "🌸", tags: [] });
+            renderData();
+          }
+        }));
+
+        projectsGroup.appendChild(projectsWrap);
+        view.appendChild(projectsGroup);
+      }
+
+      /* ---------- 渲染：themes ---------- */
+
+      function renderThemes() {
+        const view = $("visualView");
+        view.innerHTML = "";
+
+        const themes = Array.isArray(state.themes) ? state.themes : (state.themes = []);
+
+        const defaultSelect = el("select", {
+          onChange: function (e) { state.default = e.target.value; }
+        });
+        themes.forEach(function (t) {
+          const opt = el("option", { value: t.id, text: t.name || t.id });
+          if (t.id === state.default) opt.selected = true;
+          defaultSelect.appendChild(opt);
+        });
+
+        view.appendChild(el("div", { class: "group" }, [
+          el("h3", { text: "全局" }),
+          field("默认主题", defaultSelect, "必须指向下面某个主题的 id")
+        ]));
+
+        const listGroup = el("div", { class: "group" }, [
+          el("h3", { text: "主题列表" })
+        ]);
+
+        const listWrap = el("div");
+
+        themes.forEach(function (theme, i) {
+          const varsWrap = el("div");
+
+          const vars = theme.variables && typeof theme.variables === "object" ? theme.variables : (theme.variables = {});
+
+          Object.keys(vars).forEach(function (key) {
+            const row = el("div", { class: "kv-row" }, [
+              textInput(key, function (newKey) {
+                if (newKey === key) return;
+                const val = vars[key];
+                delete vars[key];
+                vars[newKey] = val;
+              }, "变量名，如 --bg-1"),
+              textInput(vars[key], function (v) { vars[key] = v; }, "变量值"),
+              el("button", {
+                class: "small-btn danger", type: "button", text: "删除",
+                onClick: function () { delete vars[key]; renderThemes(); }
+              })
+            ]);
+            varsWrap.appendChild(row);
+          });
+
+          varsWrap.appendChild(el("button", {
+            class: "add-btn", type: "button", text: "+ 添加变量",
+            onClick: function () {
+              const name = "--var-" + (Object.keys(vars).length + 1);
+              vars[name] = "";
+              renderThemes();
+            }
+          }));
+
+          const item = el("div", { class: "item" }, [
+            el("div", { class: "item-head" }, [
+              el("strong", { text: "主题 " + (i + 1) }),
+              el("button", {
+                class: "small-btn danger", type: "button", text: "删除",
+                onClick: function () {
+                  state.themes.splice(i, 1);
+                  if (!state.themes.some(function (t) { return t.id === state.default; })) {
+                    state.default = state.themes[0] ? state.themes[0].id : "";
+                  }
+                  renderThemes();
+                }
+              })
+            ]),
+            field("id", textInput(theme.id, function (v) { theme.id = v.trim(); }), "唯一标识，不能重复"),
+            field("名称", textInput(theme.name, function (v) { theme.name = v; })),
+            field("背景图", textInput(theme.background, function (v) { theme.background = v; }), "图片 URL、url(\"...\") 或 data:image/...;base64,..."),
+            field("额外 CSS", textArea(theme.css, function (v) { theme.css = v; }), "会注入到页面"),
+            el("div", { class: "field" }, [el("label", { text: "CSS 变量" }), varsWrap])
+          ]);
+
+          listWrap.appendChild(item);
+        });
+
+        listWrap.appendChild(el("button", {
+          class: "add-btn", type: "button", text: "+ 添加主题",
+          onClick: function () {
+            const id = "theme-" + (state.themes.length + 1);
+            state.themes.push({ id: id, name: "新主题", variables: {}, background: "", css: "" });
+            if (!state.default) state.default = id;
+            renderThemes();
+          }
+        }));
+
+        listGroup.appendChild(listWrap);
+        view.appendChild(listGroup);
+      }
+
+      function renderVisual() {
+        if (!state) return;
+        if (currentKey === "themes") renderThemes();
+        else renderData();
+      }
+
+      /* ---------- 同步 ---------- */
+
+      function syncJsonFromState() {
+        $("jsonEditor").value = JSON.stringify(state, null, 2);
+      }
+
+      function setMode(next) {
+        if (next === mode) return;
+
+        if (mode === "json" && next === "visual") {
+          try {
+            state = validateByKey(currentKey, JSON.parse($("jsonEditor").value.replace(/^\uFEFF/, "")));
+          } catch (e) {
+            setPanelStatus("JSON 解析失败，无法切到可视化：" + e.message, true);
+            return;
+          }
+        }
+
+        mode = next;
+        $("modeVisual").classList.toggle("active", mode === "visual");
+        $("modeJson").classList.toggle("active", mode === "json");
+        $("visualView").classList.toggle("active", mode === "visual");
+        $("jsonView").classList.toggle("active", mode === "json");
+
+        if (mode === "visual") {
+          renderVisual();
+        } else {
+          syncJsonFromState();
         }
       }
 
-      function exportJson() {
-        try {
-          const data = validateData(parseEditor());
-          downloadJson(data);
-          setPanelStatus("已导出 index.json。");
-        } catch (error) {
-          setPanelStatus("导出失败：" + error.message, true);
-        }
+      /* ---------- 载入 / 导出 ---------- */
+
+      async function fetchJson(url) {
+        const res = await fetch(url + "?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const text = (await res.text()).replace(/^\uFEFF/, "");
+        return JSON.parse(text);
       }
 
-      async function copyJson() {
+      async function loadFromServer() {
+        const file = currentFile();
+        setPanelStatus("正在从 " + file.filename + " 载入...");
         try {
-          const data = validateData(parseEditor());
-          await copyText(JSON.stringify(data, null, 2));
-          setEditor(data);
-          setPanelStatus("已复制格式化后的 JSON。");
-        } catch (error) {
-          setPanelStatus("复制失败：" + error.message, true);
-        }
-      }
-
-      async function loadFromServerIntoEditor() {
-        setPanelStatus("正在从 index.json 载入...");
-        try {
-          const response = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          let text = await response.text();
-          text = text.replace(/^\uFEFF/, "");
-          const data = validateData(JSON.parse(text));
-          setEditor(data);
-          setPanelStatus("已从 index.json 载入，点击“应用”生效。");
-        } catch (error) {
-          setPanelStatus("载入失败：" + error.message, true);
+          state = validateByKey(currentKey, await fetchJson(file.url));
+          syncJsonFromState();
+          renderVisual();
+          setPanelStatus("已从 " + file.filename + " 载入。");
+        } catch (e) {
+          state = defaultsFor(currentKey);
+          syncJsonFromState();
+          renderVisual();
+          setPanelStatus("载入失败：" + e.message + "，已使用示例数据。", true);
         }
       }
 
       function importFile(file) {
         if (!file) return;
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = function (ev) {
           try {
-            let text = String(event.target.result || "").replace(/^\uFEFF/, "");
-            const data = validateData(JSON.parse(text));
-            setEditor(data);
-            setPanelStatus("已导入文件，点击“应用”生效。");
-          } catch (error) {
-            setPanelStatus("导入失败：" + error.message, true);
+            const text = String(ev.target.result || "").replace(/^\uFEFF/, "");
+            state = validateByKey(currentKey, JSON.parse(text));
+            syncJsonFromState();
+            renderVisual();
+            setPanelStatus("已导入文件。");
+          } catch (e) {
+            setPanelStatus("导入失败：" + e.message, true);
           } finally {
             $("fileInput").value = "";
           }
         };
-        reader.onerror = () => {
+        reader.onerror = function () {
           setPanelStatus("读取文件失败。", true);
           $("fileInput").value = "";
         };
         reader.readAsText(file, "utf-8");
       }
 
-      $("importFileBtn").addEventListener("click", () => $("fileInput").click());
-      $("fileInput").addEventListener("change", function () {
-        importFile(this.files && this.files[0]);
-      });
-      $("loadServerBtn").addEventListener("click", loadFromServerIntoEditor);
-      $("resetJsonBtn").addEventListener("click", () => {
-        setEditor(cloneDefault());
-        setPanelStatus("已载入内置示例，点击“应用”生效。");
-      });
-      $("formatJsonBtn").addEventListener("click", formatJson);
-      $("applyJsonBtn").addEventListener("click", () => {
-        try {
-          const data = validateData(parseEditor());
-          setEditor(data);
-          setPanelStatus("已应用到编辑器（需回到主站手动刷新查看）。");
-        } catch (error) {
-          setPanelStatus("应用失败：" + error.message, true);
+      function currentObject() {
+        if (mode === "json") {
+          return validateByKey(currentKey, JSON.parse($("jsonEditor").value.replace(/^\uFEFF/, "")));
         }
-      });
-      $("exportJsonBtn").addEventListener("click", exportJson);
-      $("copyJsonBtn").addEventListener("click", copyJson);
+        return validateByKey(currentKey, state);
+      }
 
-      setEditor(DEFAULT_DATA);
+      function exportJson() {
+        try {
+          const data = currentObject();
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = el("a", { href: url, download: currentFile().filename });
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 1000);
+          setPanelStatus("已导出 " + currentFile().filename + "。");
+        } catch (e) {
+          setPanelStatus("导出失败：" + e.message, true);
+        }
+      }
+
+      async function copyJson() {
+        try {
+          const data = currentObject();
+          const text = JSON.stringify(data, null, 2);
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = el("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+          }
+          setPanelStatus("已复制 JSON。");
+        } catch (e) {
+          setPanelStatus("复制失败：" + e.message, true);
+        }
+      }
+
+      async function switchFile(key) {
+        currentKey = key;
+        setPanelStatus("已选择 " + currentFile().label + "。");
+        await loadFromServer();
+      }
+
+      /* ---------- 绑定 ---------- */
+
+      $("fileSelect").addEventListener("change", function () { switchFile(this.value); });
+      $("modeVisual").addEventListener("click", function () { setMode("visual"); });
+      $("modeJson").addEventListener("click", function () { setMode("json"); });
+
+      $("importFileBtn").addEventListener("click", function () { $("fileInput").click(); });
+      $("fileInput").addEventListener("change", function () { importFile(this.files && this.files[0]); });
+      $("loadServerBtn").addEventListener("click", loadFromServer);
+      $("resetBtn").addEventListener("click", function () {
+        state = defaultsFor(currentKey);
+        syncJsonFromState();
+        renderVisual();
+        setPanelStatus("已载入示例数据。");
+      });
+      $("exportBtn").addEventListener("click", exportJson);
+      $("copyBtn").addEventListener("click", copyJson);
+
+      state = defaultsFor(currentKey);
+      syncJsonFromState();
+      renderVisual();
+      loadFromServer();
     })();
   </script>
 </body>
