@@ -1,0 +1,62 @@
+{
+  "default": "sakura",
+  "themes": [
+    {
+      "id": "sakura",
+      "name": "樱花",
+      "variables": {
+        "--bg-1": "#fff7fb",
+        "--bg-2": "#ffeaf3",
+        "--bg-3": "#ffd3e5",
+        "--pink-100": "#ffeaf3",
+        "--pink-200": "#ffd3e5",
+        "--pink-300": "#ffb3d1",
+        "--pink-500": "#f06a9f",
+        "--text": "#5a3a4a",
+        "--muted": "#8d6b7a",
+        "--card": "rgba(255, 255, 255, 0.72)",
+        "--shadow": "0 18px 50px rgba(240, 106, 159, 0.16)"
+      },
+      "background": "",
+      "css": ""
+    },
+    {
+      "id": "night",
+      "name": "夜间",
+      "variables": {
+        "--bg-1": "#1a1622",
+        "--bg-2": "#221c2c",
+        "--bg-3": "#2e263a",
+        "--pink-100": "#2a2333",
+        "--pink-200": "#3d3348",
+        "--pink-300": "#57476a",
+        "--pink-500": "#c792ea",
+        "--text": "#e8e3f0",
+        "--muted": "#a89bb8",
+        "--card": "rgba(40, 34, 52, 0.72)",
+        "--shadow": "0 18px 50px rgba(0, 0, 0, 0.45)"
+      },
+      "background": "",
+      "css": ""
+    },
+    {
+      "id": "paper",
+      "name": "纸感",
+      "variables": {
+        "--bg-1": "#fbf7ef",
+        "--bg-2": "#f3ead8",
+        "--bg-3": "#e8dcc4",
+        "--pink-100": "#f7efe0",
+        "--pink-200": "#e8dcc4",
+        "--pink-300": "#c9b18a",
+        "--pink-500": "#8b6f47",
+        "--text": "#4a3b2a",
+        "--muted": "#8a7761",
+        "--card": "rgba(255, 252, 245, 0.78)",
+        "--shadow": "0 18px 50px rgba(120, 96, 60, 0.16)"
+      },
+      "background": "",
+      "css": ".profile-card, .project-card { border-radius: 8px; }"
+    }
+  ]
+}
